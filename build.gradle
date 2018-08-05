@@ -1,5 +1,4 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "2.0.2"
     id "maven"
     id "maven-publish"
     id "java"
@@ -8,14 +7,6 @@ plugins {
 group = package_group
 archivesBaseName = app_name
 version = "${version}"
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile "com.google.code.gson:gson:2.8.4"
-}
 
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {

@@ -1,9 +1,5 @@
 package me.waifu.graphquery;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,31 +7,27 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 
 public class GraphQLQuery {
 
-    private static final Gson GSON = new GsonBuilder().serializeNulls().create();
-
-    private final Map<String, Object> variables;
+    private final Variables variables;
     private final QueryObject root;
     private final Set<QueryFragment> fragments;
     private URL requestUrl;
 
     public GraphQLQuery(Consumer<GraphQLQuery> $) {
-        this.variables = new HashMap<>();
+        this.variables = new Variables();
         this.root = new QueryObject("query");
         this.fragments = new HashSet<>();
 
         $.accept(this);
     }
 
-    public FutureTask<String> submitRequest() throws IllegalStateException, IOException {
+    public FutureTask<String> createRequest() throws IllegalStateException, IOException {
         if (requestUrl == null)
             throw new IllegalStateException("Request URL must be set.");
 
@@ -46,14 +38,12 @@ public class GraphQLQuery {
         connection.setRequestProperty("Accept", "application/json");
 
         try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())) {
-            JsonObject queryRoot = new JsonObject();
-            queryRoot.addProperty("query", toString());
+            String queryRoot = "{ " +
+                    "\"query\":" + "\"" + toString() + "\"" +
+                    ",\"variables\":" + variables.toString() +
+                    "}";
 
-            JsonObject variableObject = new JsonObject();
-            variables.forEach((k, v) -> variableObject.add(k, GSON.toJsonTree(v)));
-            queryRoot.add("variables", variableObject);
-
-            writer.write(queryRoot.toString());
+            writer.write(queryRoot);
         }
 
         return new FutureTask<>(() -> {
@@ -71,7 +61,7 @@ public class GraphQLQuery {
     }
 
     public GraphQLQuery withVariable(String name, Object value) {
-        variables.put(name, value);
+        variables.add(name, value);
         return this;
     }
 
@@ -104,7 +94,7 @@ public class GraphQLQuery {
             f.appendString(queryBuilder);
             queryBuilder.append(" ");
         });
-        return queryBuilder.toString().replaceAll("  ", " ");
+        return queryBuilder.toString().replaceAll("  ", " ").trim();
     }
 
     private static String readLines(InputStream stream) {
