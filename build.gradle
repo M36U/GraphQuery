@@ -1,20 +1,16 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "2.0.2"
     id "maven"
+    id "maven-publish"
     id "java"
 }
 
-def build_number = 'CUSTOM'
-
-if (System.getenv('BUILD_NUMBER') != null)
-    build_number = System.getenv('BUILD_NUMBER')
-
 group = package_group
 archivesBaseName = app_name
-version = "${version}-${build_number}"
+version = "${version}"
 
 repositories {
-    mavenCentral();
+    mavenCentral()
 }
 
 dependencies {
