@@ -38,12 +38,7 @@ public class GraphQLQuery {
         connection.setRequestProperty("Accept", "application/json");
 
         try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())) {
-            String queryRoot = "{ " +
-                    "\"query\":" + "\"" + toString() + "\"" +
-                    ",\"variables\":" + variables.toString() +
-                    "}";
-
-            writer.write(queryRoot);
+            writer.write(getQueryString());
         }
 
         return new FutureTask<>(() -> {
@@ -83,6 +78,10 @@ public class GraphQLQuery {
         $.accept(fragment);
         fragments.add(fragment);
         return fragment;
+    }
+
+    public String getQueryString() {
+        return String.format("{\"query\":\"%s\",\"variables\":%s}", toString(), variables.toString());
     }
 
     @Override
