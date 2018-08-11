@@ -15,6 +15,11 @@ public class Variables {
         return this;
     }
 
+    public Variables reset() {
+        values.clear();
+        return this;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("{ ");

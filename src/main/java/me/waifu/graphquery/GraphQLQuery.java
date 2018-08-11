@@ -18,6 +18,7 @@ public class GraphQLQuery {
     private final QueryObject root;
     private final Set<QueryFragment> fragments;
     private URL requestUrl;
+    private boolean resetOnSubmit = true;
 
     public GraphQLQuery(Consumer<GraphQLQuery> $) {
         this.variables = new Variables();
@@ -41,6 +42,9 @@ public class GraphQLQuery {
             writer.write(getQueryString());
         }
 
+        if (resetOnSubmit)
+            variables.reset();
+
         return new FutureTask<>(() -> {
             try {
                 return readLines(connection.getInputStream());
@@ -55,8 +59,8 @@ public class GraphQLQuery {
         return this;
     }
 
-    public GraphQLQuery withVariable(String name, Object value) {
-        variables.add(name, value);
+    public GraphQLQuery resetOnSubmit(boolean resetOnSubmit) {
+        this.resetOnSubmit = resetOnSubmit;
         return this;
     }
 
