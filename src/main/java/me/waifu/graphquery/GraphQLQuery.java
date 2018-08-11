@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
@@ -20,9 +21,9 @@ public class GraphQLQuery {
     private URL requestUrl;
     private boolean resetOnSubmit = true;
 
-    public GraphQLQuery(Consumer<GraphQLQuery> $) {
+    public GraphQLQuery(RequestType requestType, Consumer<GraphQLQuery> $) {
         this.variables = new Variables();
-        this.root = new QueryObject("query");
+        this.root = new QueryObject(requestType.toString());
         this.fragments = new HashSet<>();
 
         $.accept(this);
@@ -114,5 +115,22 @@ public class GraphQLQuery {
         }
 
         return "";
+    }
+
+    public enum RequestType {
+        QUERY,
+        MUTATION,
+        ;
+
+        private final String name;
+
+        RequestType() {
+            this.name = name().toLowerCase(Locale.ROOT);
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }
