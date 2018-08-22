@@ -173,6 +173,7 @@ public class GraphQLQuery {
     public enum RequestType {
         QUERY,
         MUTATION,
+        SUBSCRIPTION,
         ;
 
         private final String name;
