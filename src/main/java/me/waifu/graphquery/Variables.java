@@ -34,6 +34,7 @@ public class Variables {
         return builder.toString();
     }
 
+    // TODO de-hardcode this
     private static String getString(Object value) {
         if (value instanceof Number)
             return value.toString();
