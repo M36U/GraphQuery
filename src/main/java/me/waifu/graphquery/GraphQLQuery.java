@@ -19,6 +19,7 @@ public class GraphQLQuery {
     private final QueryObject root;
     private final Set<QueryFragment> fragments;
     private URL requestUrl;
+    private String oauthAccessToken;
     private boolean resetOnSubmit = true;
 
     public GraphQLQuery(RequestType requestType, Consumer<GraphQLQuery> $) {
@@ -47,6 +48,8 @@ public class GraphQLQuery {
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Accept", "application/json");
+        if (oauthAccessToken != null && !oauthAccessToken.isEmpty())
+            connection.setRequestProperty("Authorization", "Bearer " + oauthAccessToken);
 
         try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())) {
             writer.write(getQueryString());
@@ -78,6 +81,17 @@ public class GraphQLQuery {
 
     public GraphQLQuery resetOnSubmit(boolean resetOnSubmit) {
         this.resetOnSubmit = resetOnSubmit;
+        return this;
+    }
+
+    /**
+     * An OAuth 2.0 access token to submit to the server for authentication. This is appended to the request headers.
+     *
+     * @param oauthAccessToken an OAuth 2.0 access token.
+     * @return this instance for chaining.
+     */
+    public GraphQLQuery withAccessToken(String oauthAccessToken) {
+        this.oauthAccessToken = oauthAccessToken;
         return this;
     }
 
