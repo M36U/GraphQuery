@@ -2,6 +2,26 @@
 
 A GraphQL query generator for Java projects.
 
+## Building
+
+Simply run `gradlew build` to compile the project once it has been cloned.
+
+## Artifacts
+
+GraphQuery is accessible to your project via a Maven repository. Just add the following to your project:
+
+### Gradle:
+```groovy
+repositories {
+    maven { url "https://waifu.me/maven" }
+}
+
+dependencies {
+    compile "me.waifu.graphquery:GraphQuery:${version}"
+}
+```
+Replace `${version}` with the version you want.
+
 ## Example
 
 ### Java code
