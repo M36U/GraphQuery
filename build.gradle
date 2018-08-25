@@ -1,5 +1,4 @@
 plugins {
-    id "maven"
     id "maven-publish"
     id "java"
 }
@@ -8,11 +7,9 @@ group = package_group
 archivesBaseName = app_name
 version = "${version}"
 
-if (JavaVersion.current().isJava8Compatible()) {
-    allprojects {
-        tasks.withType(Javadoc) {
-            options.addStringOption('Xdoclint:none', '-quiet')
-        }
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
     }
 }
 
@@ -26,9 +23,14 @@ jar {
     )
 }
 
-task sourcesJar(type: Jar) {
+task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 
 tasks.withType(JavaCompile) { task ->
@@ -41,13 +43,23 @@ publishing {
         mavenJava(MavenPublication) {
             artifact jar
             artifact sourcesJar
+            artifact javadocJar
         }
     }
     repositories {
         if (project.hasProperty('maven_repo')) {
-            maven { url maven_repo }
+            maven {
+                url maven_repo
+                credentials {
+                    username project.hasProperty('maven_username') ? maven_username : ''
+                    password project.hasProperty('maven_password') ? maven_password : ''
+                }
+            }
         } else {
             mavenLocal()
         }
     }
 }
+
+tasks.build.mustRunAfter(clean)
+tasks.build.dependsOn(sourcesJar, javadocJar)
