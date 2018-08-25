@@ -79,6 +79,13 @@ public class GraphQLQuery {
         return this;
     }
 
+    /**
+     * Whether or not variables should be reset upon submission. In most cases, this should be left as true to avoid leftover
+     * values from mucking up future requests.
+     *
+     * @param resetOnSubmit if the variables should be cleared upon submission.
+     * @return this instance for chaining.
+     */
     public GraphQLQuery resetOnSubmit(boolean resetOnSubmit) {
         this.resetOnSubmit = resetOnSubmit;
         return this;

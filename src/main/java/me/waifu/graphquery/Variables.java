@@ -2,7 +2,7 @@ package me.waifu.graphquery;
 
 import java.util.*;
 
-public class Variables {
+public final class Variables {
 
     private final Map<String, String> values;
 
