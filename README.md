@@ -9,17 +9,14 @@ A GraphQL query generator for Java projects.
 ```java
 public class QueryTest {
     public static void main(String... args) throws Exception {
-        GraphQLQuery query = new GraphQLQuery($ -> {
+        GraphQLQuery query = new GraphQLQuery(GraphQLQuery.RequestType.QUERY, $ -> {
             try {
                 $.withUrl("https://fakerql.com/graphql");
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        
             $.withArgument("someBool", "Boolean!");
-        
             $.withVariable("someBool", true);
-        
             $.withObject(root -> {
                 root.withObject("allUsers", allUsers -> {
                     allUsers.withArgument("count", 1);
@@ -31,10 +28,9 @@ public class QueryTest {
                 }).withAlias("users");
             });
         });
-        
         FutureTask<String> task = query.createRequest();
         task.run();
-        String jsonResponse = task.get();
+        System.out.println(task.get());
     }
 }
 ```
