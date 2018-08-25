@@ -50,10 +50,6 @@ publishing {
         if (project.hasProperty('maven_repo')) {
             maven {
                 url maven_repo
-                credentials {
-                    username project.hasProperty('maven_username') ? maven_username : ''
-                    password project.hasProperty('maven_password') ? maven_password : ''
-                }
             }
         } else {
             mavenLocal()
