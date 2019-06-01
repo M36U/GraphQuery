@@ -21,6 +21,7 @@ public class GraphQLQuery {
     private URL requestUrl;
     private String oauthAccessToken;
     private boolean resetOnSubmit = true;
+    private String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.66 Safari/537.36";
 
     public GraphQLQuery(RequestType requestType, Consumer<GraphQLQuery> $) {
         this.variables = new Variables();
@@ -48,6 +49,8 @@ public class GraphQLQuery {
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Accept", "application/json");
+        if (userAgent != null && !userAgent.isEmpty())
+            connection.setRequestProperty("User-Agent", userAgent);
         if (oauthAccessToken != null && !oauthAccessToken.isEmpty())
             connection.setRequestProperty("Authorization", "Bearer " + oauthAccessToken);
 
@@ -99,6 +102,17 @@ public class GraphQLQuery {
      */
     public GraphQLQuery withAccessToken(String oauthAccessToken) {
         this.oauthAccessToken = oauthAccessToken;
+        return this;
+    }
+
+    /**
+     * A string to be sent as the user agent for this request.
+     *
+     * @param userAgent a user agent string.
+     * @return this instance for chaining.
+     */
+    public GraphQLQuery withUserAgent(String userAgent) {
+        this.userAgent = userAgent;
         return this;
     }
 
