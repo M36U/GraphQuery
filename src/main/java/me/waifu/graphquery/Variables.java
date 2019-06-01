@@ -11,7 +11,7 @@ public final class Variables {
     }
 
     public Variables add(String name, Object value) {
-        values.put(name, getString(value));
+        values.put(name, Util.getString(value));
         return this;
     }
 
@@ -32,33 +32,5 @@ public final class Variables {
 
         builder.append(" }");
         return builder.toString();
-    }
-
-    // TODO de-hardcode this
-    private static String getString(Object value) {
-        if (value instanceof Number)
-            return value.toString();
-        else if (value instanceof Character || value instanceof CharSequence)
-            return "\"" + value + "\"";
-        else if (value instanceof Boolean)
-            return value.toString();
-        else if (value instanceof Collection) {
-            Collection collection = (Collection) value;
-            if (collection.isEmpty())
-                return "[]";
-            else {
-                StringBuilder builder = new StringBuilder("[");
-                for (Object entry : collection) {
-                    if (builder.length() > 1)
-                        builder.append(",");
-
-                    builder.append(getString(entry));
-                }
-                builder.append("]");
-                return builder.toString();
-            }
-        }
-        else
-            throw new IllegalArgumentException("Unknown type " + value.getClass().getName());
     }
 }

@@ -62,7 +62,7 @@ public class QueryObject implements IQueryEntry<QueryObject> {
         builder.append(name);
         if (!arguments.isEmpty()) {
             builder.append("(");
-            arguments.forEach((k, v) -> builder.append(k).append(": ").append(v).append(", "));
+            arguments.forEach((k, v) -> builder.append(k).append(": ").append(Util.getString(v)).append(", "));
             if (builder.charAt(builder.length() - 1) == ' ')
                 builder.delete(builder.length() - 2, builder.length());
 
