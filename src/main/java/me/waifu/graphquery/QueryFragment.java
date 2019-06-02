@@ -6,7 +6,7 @@ public class QueryFragment extends QueryObject {
     protected boolean inline = false;
 
     public QueryFragment(String name, String type) {
-        super(name);
+        super(name, false);
 
         this.type = type;
     }

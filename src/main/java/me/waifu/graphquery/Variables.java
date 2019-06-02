@@ -11,7 +11,7 @@ public final class Variables {
     }
 
     public Variables add(String name, Object value) {
-        values.put(name, Util.getString(value));
+        values.put(name, Util.getString(value, true));
         return this;
     }
 

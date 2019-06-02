@@ -9,14 +9,16 @@ import java.util.function.Consumer;
 public class QueryObject implements IQueryEntry<QueryObject> {
 
     protected final String name;
+    protected final boolean root;
     protected final List<IQueryEntry> entries;
     private final Map<String, Object> arguments;
     protected String alias;
     protected String includeVariable;
     protected String skipVariable;
 
-    QueryObject(String name) {
+    QueryObject(String name, boolean root) {
         this.name = name;
+        this.root = root;
         this.entries = new ArrayList<>();
         this.arguments = new HashMap<>();
     }
@@ -48,7 +50,7 @@ public class QueryObject implements IQueryEntry<QueryObject> {
     }
 
     public QueryObject withObject(String name, Consumer<QueryObject> $) {
-        QueryObject object = new QueryObject(name);
+        QueryObject object = new QueryObject(name, false);
         $.accept(object);
         entries.add(object);
         return object;
@@ -62,7 +64,7 @@ public class QueryObject implements IQueryEntry<QueryObject> {
         builder.append(name);
         if (!arguments.isEmpty()) {
             builder.append("(");
-            arguments.forEach((k, v) -> builder.append(k).append(": ").append(Util.getString(v)).append(", "));
+            arguments.forEach((k, v) -> builder.append(k).append(": ").append(Util.getString(v, !Util.isVariable(v))).append(", "));
             if (builder.charAt(builder.length() - 1) == ' ')
                 builder.delete(builder.length() - 2, builder.length());
 

@@ -25,7 +25,7 @@ public class GraphQLQuery {
 
     public GraphQLQuery(RequestType requestType, Consumer<GraphQLQuery> $) {
         this.variables = new Variables();
-        this.root = new QueryObject(requestType.toString());
+        this.root = new QueryObject(requestType.toString(), true);
         this.fragments = new HashSet<>();
 
         $.accept(this);
@@ -127,7 +127,7 @@ public class GraphQLQuery {
         if (!name.startsWith("$"))
             name = "$" + name;
 
-        root.withArgument(name, type);
+        root.withArgument(name, "#" + type);
         return this;
     }
 
